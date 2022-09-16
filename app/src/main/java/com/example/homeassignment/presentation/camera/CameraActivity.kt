@@ -126,17 +126,7 @@ class CameraActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    /**
-     *  [androidx.camera.core.ImageAnalysis], [androidx.camera.core.Preview] requires enum value of
-     *  [androidx.camera.core.AspectRatio]. Currently it has values of 4:3 & 16:9.
-     *
-     *  Detecting the most suitable ratio for dimensions provided in @params by counting absolute
-     *  of preview ratio to one of the provided values.
-     *
-     *  @param width - preview width
-     *  @param height - preview height
-     *  @return suitable aspect ratio
-     */
+
     private fun aspectRatio(width: Int, height: Int): Int {
         val previewRatio = max(width, height).toDouble() / min(width, height)
         if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
@@ -146,11 +136,6 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun bindAnalyseUseCase() {
-        // Note that if you know which format of barcode your app is dealing with, detection will be
-        // faster to specify the supported barcode formats one by one, e.g.
-        // BarcodeScannerOptions.Builder()
-        //     .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-        //     .build();
 
         val barcodeScanner = BarcodeScanning.getClient()
         if (cameraProvider == null) {
@@ -242,9 +227,7 @@ class CameraActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Log.i("barcode", it.message.toString())
         }.addOnCompleteListener {
-            // When the image is from CameraX analysis use case, must call image.close() on received
-            // images when finished using them. Otherwise, new images may not be received or the camera
-            // may stall.
+         
             imageProxy.close()
         }
     }
